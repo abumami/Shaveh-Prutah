@@ -73,12 +73,12 @@ export default function Home() {
   return (
     <main className="min-h-screen overflow-hidden">
       <div className="grain" aria-hidden="true" />
-      <header className="mx-auto flex w-full max-w-6xl items-center justify-between px-5 py-6 sm:px-8">
+      <header className="mx-auto flex w-full max-w-6xl items-center justify-between px-5 py-4 sm:px-8 sm:py-5">
         <a href="#values" className="flex items-center gap-3 font-semibold tracking-tight"><span className="logo-mark"><Scale size={20} strokeWidth={1.8} /></span><span>Prutah · פרוטה</span></a>
         <div className="market-status"><span className={`status-dot ${data.live ? 'is-live' : ''}`} /><span>{data.live ? 'Live market rates' : 'Recent reference rates'}<b lang="he" dir="rtl">{data.live ? 'שערי שוק בזמן אמת' : 'שערים עדכניים אחרונים'}</b></span></div>
       </header>
 
-      <section id="values" className="hero-grid mx-auto grid w-full max-w-6xl gap-10 px-5 pb-12 pt-8 sm:px-8 lg:grid-cols-[0.82fr_1.18fr] lg:items-center lg:gap-20 lg:pb-20 lg:pt-14">
+      <section id="values" className="hero-grid mx-auto grid w-full max-w-6xl gap-10 px-5 pb-12 pt-2 sm:px-8 sm:pt-4 lg:grid-cols-[0.82fr_1.18fr] lg:items-start lg:gap-20 lg:pb-16 lg:pt-5">
         <div className="max-w-xl">
           <div className="eyebrow"><Sparkles size={13} /> A measure with meaning <span lang="he" dir="rtl">· שיעור בעל משמעות</span></div>
           <h1>What is a <em>shaveh prutah</em> worth in your currency?</h1>
