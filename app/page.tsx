@@ -1,5 +1,3 @@
-'use client';
-
 import { useCallback, useEffect, useState } from 'react';
 import { Plus, RefreshCw, Scale, Sparkles, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -26,6 +24,8 @@ const FALLBACK: RateData = {
 };
 const GRAMS_PER_TROY_OUNCE = 31.1034768;
 const PRUTAH_GRAMS = 0.025;
+const SILVER_API = 'https://api.gold-api.com/price/XAG';
+const CURRENCY_API = 'https://api.frankfurter.dev/v2/rates?base=USD&quotes=EUR,GBP,ILS,CAD,AUD,CHF,JPY';
 
 export default function Home() {
   const [extraCurrencies, setExtraCurrencies] = useState<string[]>([]);
@@ -36,9 +36,15 @@ export default function Home() {
   const refresh = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await fetch('/api/rates', { cache: 'no-store' });
-      if (!response.ok) throw new Error('Rates unavailable');
-      setData(await response.json());
+      const [silverResponse, currencyResponse] = await Promise.all([
+        fetch(SILVER_API, { cache: 'no-store' }),
+        fetch(CURRENCY_API, { cache: 'no-store' }),
+      ]);
+      if (!silverResponse.ok || !currencyResponse.ok) throw new Error('Market data unavailable');
+      const silver = await silverResponse.json() as { price: number; updatedAt: string };
+      const currencyRows = await currencyResponse.json() as Array<{ quote: string; rate: number }>;
+      const rates = Object.fromEntries(currencyRows.map(({ quote, rate }) => [quote, rate]));
+      setData({ silverUsdPerOunce: silver.price, rates: { ...rates, USD: 1 }, updatedAt: silver.updatedAt, live: true });
     } catch { setData(FALLBACK); } finally { setLoading(false); }
   }, []);
 
