@@ -70,7 +70,7 @@ export default function Home() {
           <div className="conversion-arrow" aria-hidden="true"><ArrowRight /></div>
           <output className="result-block" aria-live="polite"><span className="result-kicker">Equals approximately</span><strong>{result}</strong><span className="result-label">shaveh prutah{prutot === 1 ? '' : ' values'}</span></output>
           <div className="rate-strip"><div><span>1 shaveh prutah</span><strong>{selected[1]}{money(valuePerPrutah)} {currency}</strong></div><div><span>Silver spot price</span><strong>${data.silverUsdPerOunce.toFixed(2)} / oz</strong></div></div>
-          <p className="timestamp">Rates updated {new Date(data.updatedAt).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })}</p>
+          <p className="timestamp">Rates updated {new Date(data.updatedAt).toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'UTC' })} UTC</p>
         </div>
       </section>
 
