@@ -1,9 +1,8 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { ArrowRight, RefreshCw, Scale, Sparkles } from 'lucide-react';
+import { useCallback, useEffect, useState } from 'react';
+import { RefreshCw, Scale, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const currencies = [
@@ -21,7 +20,6 @@ const GRAMS_PER_TROY_OUNCE = 31.1034768;
 const PRUTAH_GRAMS = 0.025;
 
 export default function Home() {
-  const [amount, setAmount] = useState('1');
   const [currency, setCurrency] = useState('ILS');
   const [data, setData] = useState<RateData>(FALLBACK);
   const [loading, setLoading] = useState(true);
@@ -37,9 +35,6 @@ export default function Home() {
 
   const selected = currencies.find(([code]) => code === currency) ?? currencies[0];
   const valuePerPrutah = (data.silverUsdPerOunce / GRAMS_PER_TROY_OUNCE) * PRUTAH_GRAMS * (data.rates[currency] ?? 1);
-  const numericAmount = Math.max(0, Number.parseFloat(amount) || 0);
-  const prutot = numericAmount / valuePerPrutah;
-  const result = useMemo(() => new Intl.NumberFormat('en-US', { maximumFractionDigits: prutot >= 100 ? 1 : 3 }).format(prutot), [prutot]);
   const money = (value: number) => new Intl.NumberFormat('en-US', { minimumFractionDigits: value < 0.1 ? 4 : 2, maximumFractionDigits: value < 0.1 ? 4 : 2 }).format(value);
 
   return (
@@ -53,23 +48,22 @@ export default function Home() {
       <section id="converter" className="mx-auto grid w-full max-w-6xl gap-10 px-5 pb-12 pt-8 sm:px-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:gap-20 lg:pb-20 lg:pt-16">
         <div className="max-w-xl">
           <div className="eyebrow"><Sparkles size={13} /> A measure with meaning</div>
-          <h1>What is your money worth <em>in silver?</em></h1>
-          <p className="lede">Convert any amount into <strong>shaveh prutah</strong>—the current market value of 0.025 grams of pure silver.</p>
+          <h1>What is a <em>shaveh prutah</em> worth?</h1>
+          <p className="lede">See the current market value of <strong>shaveh prutah</strong>—0.025 grams of pure silver—in your currency.</p>
           <div className="definition"><span className="hebrew" lang="he" dir="rtl">שווה פרוטה</span><div><strong>shaveh prutah</strong><br /><span>“worth a prutah”</span></div></div>
         </div>
 
         <div className="converter-card">
-          <div className="card-topline"><span>Enter an amount</span><Button variant="ghost" size="sm" onClick={() => void refresh()} disabled={loading} aria-label="Refresh market rates"><RefreshCw className={loading ? 'animate-spin' : ''} /> Refresh</Button></div>
-          <div className="amount-row">
-            <Input aria-label="Amount" inputMode="decimal" type="number" min="0" step="any" value={amount} onChange={(event) => setAmount(event.target.value)} onFocus={(event) => event.currentTarget.select()} />
+          <div className="card-topline"><span>Current value</span><Button variant="ghost" size="sm" onClick={() => void refresh()} disabled={loading} aria-label="Refresh market rates"><RefreshCw className={loading ? 'animate-spin' : ''} /> Refresh</Button></div>
+          <div className="currency-row">
+            <span>Show value in</span>
             <Select value={currency} onValueChange={(value) => value && setCurrency(value)}>
               <SelectTrigger aria-label="Currency"><SelectValue /></SelectTrigger>
               <SelectContent align="end">{currencies.map(([code, symbol, name]) => <SelectItem key={code} value={code}><span className="currency-symbol">{symbol}</span> {code} · {name}</SelectItem>)}</SelectContent>
             </Select>
           </div>
-          <div className="conversion-arrow" aria-hidden="true"><ArrowRight /></div>
-          <output className="result-block" aria-live="polite"><span className="result-kicker">Equals approximately</span><strong>{result}</strong><span className="result-label">shaveh prutah{prutot === 1 ? '' : ' values'}</span></output>
-          <div className="rate-strip"><div><span>1 shaveh prutah</span><strong>{selected[1]}{money(valuePerPrutah)} {currency}</strong></div><div><span>Silver spot price</span><strong>${data.silverUsdPerOunce.toFixed(2)} / oz</strong></div></div>
+          <output className="result-block" aria-live="polite"><span className="result-kicker">One shaveh prutah is worth approximately</span><strong>{selected[1]}{money(valuePerPrutah)}</strong><span className="result-label">{currency}</span></output>
+          <div className="rate-strip single"><div><span>Silver spot price</span><strong>${data.silverUsdPerOunce.toFixed(2)} / oz</strong></div></div>
           <p className="timestamp">Rates updated {new Date(data.updatedAt).toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'UTC' })} UTC</p>
         </div>
       </section>
