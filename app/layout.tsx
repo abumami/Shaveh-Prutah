@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: 'Prutah — Silver Value Converter',
-  description: 'See the current value of 0.025 grams of pure silver — a shaveh prutah — in your currency.',
+  description: 'See the current value of a shaveh prutah in common currencies. הצגת שווי פרוטה במטבעות נפוצים.',
   openGraph: {
     title: 'Prutah — Silver Value Converter',
     description: 'Know the value of a shaveh prutah.',
