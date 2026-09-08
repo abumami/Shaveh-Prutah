@@ -88,7 +88,7 @@ export default function Home() {
         <div className="max-w-xl">
           <div className="eyebrow"><Sparkles size={13} /> A measure with meaning <span lang="he" dir="rtl">· שיעור בעל משמעות</span></div>
           <h1>What is a <em>shaveh prutah</em> worth in your currency?</h1>
-          <h2 lang="he" dir="rtl">כמה <em>שווה פרוטה</em> במטבע שלך?</h2>
+          <h2 lang="he" dir="rtl">כמה ערך<em>שווה פרוטה</em> במטבע שלך?</h2>
           <p className="lede">The current market value of <strong>0.025 grams of pure silver.</strong><span lang="he" dir="rtl">השווי הנוכחי בשוק של <strong>0.025 גרם כסף טהור.</strong></span></p>
           <div className="definition"><span className="hebrew" lang="he" dir="rtl">שווה פרוטה</span><div><strong>shaveh prutah</strong><br /><span>“worth a prutah” · ״שווה פרוטה״</span></div></div>
         </div>
