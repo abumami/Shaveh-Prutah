@@ -13,13 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(
-    process.env.VERCEL_PROJECT_PRODUCTION_URL
-      ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-      : 'http://localhost:3000',
-  ),
   title: 'Prutah — Silver Value Converter',
-  description: 'Convert any currency amount into the value of 0.025 grams of pure silver — a shaveh prutah.',
+  description: 'See the current value of a shaveh prutah in common currencies. הצגת שווי פרוטה במטבעות נפוצים.',
   openGraph: {
     title: 'Prutah — Silver Value Converter',
     description: 'Know the value of a shaveh prutah.',
