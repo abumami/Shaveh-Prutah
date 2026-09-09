@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Plus, RefreshCw, Scale, Sparkles, X } from 'lucide-react';
+import { Plus, RefreshCw, Sparkles, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
@@ -80,7 +80,7 @@ export default function Home() {
     <main className="min-h-screen overflow-hidden">
       <div className="grain" aria-hidden="true" />
       <header className="mx-auto flex w-full max-w-6xl items-center justify-between px-5 py-2 sm:px-8 sm:py-3">
-        <a href="#values" className="flex items-center gap-3 font-semibold tracking-tight"><span className="logo-mark"><Scale size={20} strokeWidth={1.8} /></span><span className="flex items-center gap-2"><span>Shaveh Prutah</span><span lang="he" dir="rtl">שווה פרוטה</span></span></a>
+        <a href="#values" className="flex items-center gap-3 font-semibold tracking-tight"><span className="logo-mark"><img src="/prutah-icon.png" alt="" /></span><span className="flex items-center gap-2"><span>Shaveh Prutah</span><span lang="he" dir="rtl">שווה פרוטה</span></span></a>
         <div className="market-status"><span className={`status-dot ${data.live ? 'is-live' : ''}`} /><span>{data.live ? 'Live market rates' : 'Recent reference rates'}<b lang="he" dir="rtl">{data.live ? 'שערי שוק בזמן אמת' : 'שערים עדכניים אחרונים'}</b></span></div>
       </header>
 
