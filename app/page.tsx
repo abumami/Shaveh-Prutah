@@ -1,7 +1,5 @@
-'use client';
-
 import { useCallback, useEffect, useState } from 'react';
-import { Plus, RefreshCw, Sparkles, X } from 'lucide-react';
+import { Plus, RefreshCw, Scale, Sparkles, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
@@ -26,6 +24,8 @@ const FALLBACK: RateData = {
 };
 const GRAMS_PER_TROY_OUNCE = 31.1034768;
 const PRUTAH_GRAMS = 0.025;
+const SILVER_API = 'https://api.gold-api.com/price/XAG';
+const CURRENCY_API = 'https://api.frankfurter.dev/v2/rates?base=USD&quotes=EUR,GBP,ILS,CAD,AUD,CHF,JPY';
 
 export default function Home() {
   const [extraCurrencies, setExtraCurrencies] = useState<string[]>([]);
@@ -36,9 +36,15 @@ export default function Home() {
   const refresh = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await fetch('/api/rates', { cache: 'no-store' });
-      if (!response.ok) throw new Error('Rates unavailable');
-      setData(await response.json());
+      const [silverResponse, currencyResponse] = await Promise.all([
+        fetch(SILVER_API, { cache: 'no-store' }),
+        fetch(CURRENCY_API, { cache: 'no-store' }),
+      ]);
+      if (!silverResponse.ok || !currencyResponse.ok) throw new Error('Market data unavailable');
+      const silver = await silverResponse.json() as { price: number; updatedAt: string };
+      const currencyRows = await currencyResponse.json() as Array<{ quote: string; rate: number }>;
+      const rates = Object.fromEntries(currencyRows.map(({ quote, rate }) => [quote, rate]));
+      setData({ silverUsdPerOunce: silver.price, rates: { ...rates, USD: 1 }, updatedAt: silver.updatedAt, live: true });
     } catch { setData(FALLBACK); } finally { setLoading(false); }
   }, []);
 
@@ -74,7 +80,7 @@ export default function Home() {
     <main className="min-h-screen overflow-hidden">
       <div className="grain" aria-hidden="true" />
       <header className="mx-auto flex w-full max-w-6xl items-center justify-between px-5 py-2 sm:px-8 sm:py-3">
-        <a href="#values" className="flex items-center gap-3 font-semibold tracking-tight"><span className="logo-mark"><img src="/prutah-icon.png" alt="" /></span><span className="flex items-center gap-2"><span>Shaveh Prutah</span><span lang="he" dir="rtl">שווה פרוטה</span></span></a>
+        <a href="#values" className="flex items-center gap-3 font-semibold tracking-tight"><span className="logo-mark"><Scale size={20} strokeWidth={1.8} /></span><span className="flex items-center gap-2"><span>Shaveh Prutah</span><span lang="he" dir="rtl">שווה פרוטה</span></span></a>
         <div className="market-status"><span className={`status-dot ${data.live ? 'is-live' : ''}`} /><span>{data.live ? 'Live market rates' : 'Recent reference rates'}<b lang="he" dir="rtl">{data.live ? 'שערי שוק בזמן אמת' : 'שערים עדכניים אחרונים'}</b></span></div>
       </header>
 
@@ -82,7 +88,7 @@ export default function Home() {
         <div className="max-w-xl">
           <div className="eyebrow"><Sparkles size={13} /> A measure with meaning <span lang="he" dir="rtl">· שיעור בעל משמעות</span></div>
           <h1>What is a <em>shaveh prutah</em> worth in your currency?</h1>
-          <h2 lang="he" dir="rtl">מה ערך <em>שווה פרוטה</em> במטבע שלך?</h2>
+          <h2 lang="he" dir="rtl"> כמה ערך <em>שווה פרוטה</em> במטבע שלך?</h2>
           <p className="lede">The current market value of <strong>0.025 grams of pure silver.</strong><span lang="he" dir="rtl">השווי הנוכחי בשוק של <strong>0.025 גרם כסף טהור.</strong></span></p>
           <div className="definition"><span className="hebrew" lang="he" dir="rtl">שווה פרוטה</span><div><strong>shaveh prutah</strong><br /><span>“worth a prutah” · ״שווה פרוטה״</span></div></div>
         </div>
